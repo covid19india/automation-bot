@@ -1,13 +1,14 @@
 name: Me Botto
 
 on:
-  schedule:
-    # every 10 minutes the job will run
-    - cron: "*/10 * * * *"
+  # schedule:
+  #   # every 10 minutes the job will run
+  #   - cron: "*/10 * * * *"
   push:
     branches:
       - master
-
+  repository_dispatch:
+    types: [my-event]
 jobs:
   run-bot:
     runs-on: ubuntu-latest
@@ -36,3 +37,8 @@ jobs:
         python start.py
       env:
           COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
+    - name: Repository Dispatch
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.JUN_TOKEN }}
+        event-type: my-event

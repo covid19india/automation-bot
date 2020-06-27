@@ -11,9 +11,13 @@ import telegram
 from telegram.error import NetworkError, Unauthorized
 from time import sleep
 import os
+from time import time
 
 BOT_TOKEN = os.environ['COVID_BOT_TOKEN']
-print(BOT_TOKEN)
+# print(BOT_TOKEN)
+
+start_time = int(time())
+print("Start time: " + str(start_time))
 
 update_id = None
 
@@ -35,6 +39,11 @@ def main():
 
     while True:
         try:
+            if int(time()) - start_time > 60:
+                print("enough for the day!")
+                break
+            else:
+                print(int(time()) - start_time)
             echo(bot)
         except NetworkError:
             sleep(1)
@@ -49,6 +58,7 @@ def echo(bot):
     # Request updates after the last update_id
     for update in bot.get_updates(offset=update_id, timeout=10):
         update_id = update.update_id + 1
+        # print(update)
 
         if update.message:  # your bot can receive updates without messages
             # Reply to the message
