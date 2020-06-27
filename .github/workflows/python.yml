@@ -37,14 +37,18 @@ jobs:
         python start.py
       env:
           COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
+          UPDATE_ID: ${{ github.event.client_payload.update_id }}
     - name: Repository Dispatch
       uses: actions/github-script@v2
       with:
         github-token: ${{secrets.JUN_TOKEN}}
         script: |
+          const fs = require('fs');
+          update_id = fs.readFileSync('/tmp/update_id', 'utf8');
+          console.log("This is the last update_id: "+update_id);
           await github.repos.createDispatchEvent({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   event_type: "my-event",
-                  client_payload: { greeting: "hello" }
+                  client_payload: { greeting: "hello", update_id: update_id }
                 });
