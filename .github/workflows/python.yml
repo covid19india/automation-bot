@@ -43,7 +43,7 @@ jobs:
         github-token: ${{secrets.JUN_TOKEN}}
         script: |
           await github.repos.createDispatchEvent({
-                  owner: issue.owner,
-                  repo: issue.repo,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
                   event_type: "my-event",
                 });
