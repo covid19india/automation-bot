@@ -14,15 +14,14 @@ import os
 from time import time
 
 BOT_TOKEN = os.environ['COVID_BOT_TOKEN']
-UPDATE_ID = os.environ['UPDATE_ID']
+update_id = int(os.environ['UPDATE_ID'])
 print("this is the last update_id")
-print(UPDATE_ID)
+print(update_id)
 # print(BOT_TOKEN)
 
 start_time = int(time())
 print("Start time: " + str(start_time))
 
-update_id = 0
 
 
 def main():
