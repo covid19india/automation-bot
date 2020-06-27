@@ -14,7 +14,10 @@ import os
 from time import time
 
 BOT_TOKEN = os.environ['COVID_BOT_TOKEN']
-update_id = int(os.environ['UPDATE_ID'])
+if os.environ['UPDATE_ID']:
+    update_id = int(os.environ['UPDATE_ID'])
+else:
+    update_id = None
 print("this is the last update_id")
 print(update_id)
 # print(BOT_TOKEN)
