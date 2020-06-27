@@ -46,4 +46,5 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   event_type: "my-event",
+                  client_payload: { greeting: "hello" }
                 });
