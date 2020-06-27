@@ -1,0 +1,38 @@
+name: Me Botto
+
+on:
+  schedule:
+    # every 10 minutes the job will run
+    - cron: "*/10 * * * *"
+  push:
+    branches:
+      - master
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9  
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        # This path is specific to Ubuntu
+        path: ~/.cache/pip
+        # Look to see if there is a cache hit for the corresponding requirements file
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          ${{ runner.os }}-
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Start Bot
+      run: |
+        python start.py
+      env:
+          COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
