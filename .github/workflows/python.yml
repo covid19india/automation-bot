@@ -38,7 +38,7 @@ jobs:
       env:
           COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
     - name: Repository Dispatch
-      uses: actions/github-script@0.9.0
+      uses: actions/github-script@v1
       with:
         github-token: ${{secrets.JUN_TOKEN}}
         script: |
