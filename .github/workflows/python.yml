@@ -30,8 +30,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
-    - name: Install dependencies
+    - name: Install OS dependencies
       run: apt install build-essential libpoppler-cpp-dev pkg-config
+    - name: Install Python dependencies
       run: pip install -r requirements.txt
     - name: Start Bot
       run: |
