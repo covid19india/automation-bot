@@ -1,0 +1,3 @@
+[submodule "webScraper"]
+	path = webScraper
+	url = https://github.com/bee-rickey/webScraper
