@@ -157,3 +157,5 @@ dmypy.json
 cython_debug/
 
 .vscode/
+
+visionapi.json
