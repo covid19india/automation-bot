@@ -48,16 +48,18 @@ class Bulletin():
             is_translate = "False"
         start_district = ""
         libpath = Path(Path('.').absolute() , "./webScraper/automation/ocr")
-        
+        message = ""
+
         for impath in self.files:
+            logging.info(impath)
             # cmd = ['sh', 'ocr.sh', '/tmp/im.jpg', 'Bihar', '', 'False', 'individual']
             command = ["sh",
-                "ocr.sh",
-             str(impath),
-             str(self.state),
-             str(start_district),
-             str(is_translate),
-             str(self.type)
+            "ocr.sh",
+            str(impath),
+            str(self.state),
+            str(start_district),
+            str(is_translate),
+            str(self.type)
             ]
             logging.info(command)
 
@@ -67,13 +69,17 @@ class Bulletin():
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
             
+
             if result.stdout != b'':
-                return result.stdout.decode("utf-8")
+                logging.info("Results obtained")
+                message = message + result.stdout.decode("utf-8")
             elif result.stderr != b'':
-                return result.stdout.decode("utf-8")
+                logging.error("OCR error")
+                message = message + result.stderr.decode("utf-8")
             else:
+                logger.error("No response from subprocess")
                 return -1
-        return message
+        return "```\n" + message.strip() + "\n```"
 
 
 

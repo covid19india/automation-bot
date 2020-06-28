@@ -1,15 +1,18 @@
+import telegram
 from src.bulletin import Bulletin
+
 
 def entry(bot, update):
     print(update)
-    if update.message: 
+    if update.message:
         # Reply to the message
         if update.message.text.find("Bihar") > -1:
-            b = Bulletin(state="Bihar",type="individual")
+            b = Bulletin(state="Bihar", type="individual")
             message = b.get_detailed()
         else:
             message = "Not there yet!"
-        update.message.reply_text(message)
+        update.message.reply_text(message, parse_mode=telegram.ParseMode.MARKDOWN)
+
 
 if __name__ == "__main__":
     entry()
