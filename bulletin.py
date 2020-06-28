@@ -11,7 +11,7 @@ logging.basicConfig(
 
 class Bulletin():
     BULLETIN_TYPE = "image" # Could be changed to pdf while init
-    TMP_DIR = Path('.') / "tmp"
+    TMP_DIR = "/tmp"
 
     def __init__(self,**kwargs):
         try:
