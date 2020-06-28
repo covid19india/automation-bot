@@ -49,7 +49,7 @@ def main():
         except Unauthorized:
             # The user has removed or blocked the bot.
             update_id += 1
-        if int(time()) - start_time > 3600:
+        if int(time()) - start_time > 60:
             print("enough for the day!")
             with open("/tmp/update_id", "w") as the_file:
                 the_file.write(str(update_id))
@@ -62,7 +62,7 @@ def echo(bot):
     """Echo the message the user sent."""
     global update_id
     # Request updates after the last update_id
-    for update in bot.get_updates(offset=update_id, timeout=60):
+    for update in bot.get_updates(offset=update_id, timeout=10):
         update_id = update.update_id + 1
         # print(update)
 
