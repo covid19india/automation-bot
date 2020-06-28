@@ -8,13 +8,26 @@ from time import sleep
 import os
 from time import time
 from src.entry import entry
+import json
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
-BOT_TOKEN = os.environ["COVID_BOT_TOKEN"]
+try:
+    COVID_BOT_TOKEN = os.environ["COVID_BOT_TOKEN"]
+except KeyError:
+    logging.error("Bot credentials not found in environment")
+try:
+    # If the token is available in the environment,
+    # print it to a file
+    VISIONAPI_TOKEN = os.environ["VISIONAPI_TOKEN"]
+    with open('visionapi.json','w') as f:
+        print(VISIONAPI_TOKEN,file=f)
+except KeyError:
+    logging.error("VisionAPI credentials not found in environment")
+
 # How long the container exist
 LIFESPAN = 3600
 
@@ -28,7 +41,7 @@ def main():
 
     start_time = int(time())
 
-    bot = telegram.Bot(BOT_TOKEN)
+    bot = telegram.Bot(COVID_BOT_TOKEN)
 
     while True:
         try:
