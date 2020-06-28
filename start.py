@@ -14,10 +14,11 @@ import os
 from time import time
 
 BOT_TOKEN = os.environ["COVID_BOT_TOKEN"]
-if os.environ["UPDATE_ID"]:
+try:
     update_id = int(os.environ["UPDATE_ID"])
-else:
-    update_id = None
+except:
+    update_id = 0
+
 print("this is the last update_id")
 print(update_id)
 # print(BOT_TOKEN)
@@ -49,7 +50,7 @@ def main():
         except Unauthorized:
             # The user has removed or blocked the bot.
             update_id += 1
-        if int(time()) - start_time > 60:
+        if int(time()) - start_time > 3600:
             print("enough for the day!")
             with open("/tmp/update_id", "w") as the_file:
                 the_file.write(str(update_id))
@@ -62,7 +63,7 @@ def echo(bot):
     """Echo the message the user sent."""
     global update_id
     # Request updates after the last update_id
-    for update in bot.get_updates(offset=update_id, timeout=10):
+    for update in bot.get_updates(offset=update_id, timeout=60):
         update_id = update.update_id + 1
         # print(update)
 
