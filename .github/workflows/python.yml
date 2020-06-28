@@ -16,14 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    # - name: Clone webScraper repo
-    #   uses: actions/checkout@v2
-    #   with:
-    #     repository: sudevschiz/webScraper
     - name: Cache pip
       uses: actions/cache@v2
       with:
