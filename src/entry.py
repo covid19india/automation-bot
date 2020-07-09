@@ -76,6 +76,8 @@ def entry(bot, update):
                     os.remove(path_automation + "/output2.txt")
                 except:
                     pass
+            elif update.message.text.startswith("/test"):
+                message = "200 OK!"
         else:
             # message = "Not a command!"
             pass
