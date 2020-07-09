@@ -1,18 +1,76 @@
 import telegram
 from src.bulletin import Bulletin
+import subprocess
+import os
+import shlex
 
 
 def entry(bot, update):
     print(update)
+    message = None
+    path = os.path.abspath("")
+    path_ocr = path + "/webScraper/automation/ocr"
+    path_automation = path + "/webScraper/automation"
     if update.message:
         # Reply to the message
-        if update.message.text.find("Bihar") > -1:
-            b = Bulletin(state="Bihar", type="individual")
-            message = b.get_detailed()
+        if not update.message.text:
+            return
+        if update.message.reply_to_message and update.message.text.startswith("/"):
+            text_prev = update.message.text
+            print("prev")
+            print(text_prev)
+            text_replaced = text_prev.replace("“", '"').replace("”", '"')
+            print("replaced")
+            print(text_replaced)
+            text = shlex.split(text_replaced)
+            print("final")
+            print(text)
+            if update.message.text.startswith("/ocr1"):
+                photo = update.message.reply_to_message.photo[-1]
+                file_id = photo.file_id
+                newFile = bot.get_file(file_id)
+                newFile.download("/tmp/file.jpg")
+                print("File downloaded")
+                print(update.message.text)
+                
+
+                print(path)
+                # ./ocr.sh /tmp/file.jpg Bihar Araria True
+                subprocess.call(
+                    ["bash", "ocr.sh", "/tmp/file.jpg", text[1], text[2], text[3]],
+                    cwd=path_ocr,
+                )
+                bot.send_photo(
+                    chat_id=update.message.chat.id,
+                    photo=open(path_ocr + "/image.png", "rb"),
+                )
+                with open(path_ocr + "/output.txt") as f:
+                    bot.send_message(chat_id=update.message.chat.id, text=f.read())
+                os.remove("/tmp/file.jpg")
+                os.remove(path_ocr + "/output.txt")
+            elif update.message.text.startswith("/ocr2"):
+                output1 = update.message.reply_to_message.text
+                state_name = text[1]
+                print("Statename" + state_name)
+                print(output1)
+                with open(path_ocr + "/output.txt", "w+") as f:
+                    f.write(output1)
+                # ./ocr.sh ../../../b2.jpg Rajasthan AJMER False ocr,table
+                subprocess.call(
+                    ["bash", "ocr.sh", "", state_name, "", "", "ocr,table"],
+                    cwd=path_ocr,
+                )
+                try:
+                    with open(path_automation + "/output2.txt") as f:
+                        bot.send_message(chat_id=update.message.chat.id, text=f.read())
+                    os.remove(path_automation + "/output2.txt")
+                except:
+                    pass
         else:
-            message = "Not there yet!"
-        update.message.reply_text(message, parse_mode=telegram.ParseMode.MARKDOWN)
+            message = "Not a command!"
+        if message:
+            update.message.reply_text(message, parse_mode=telegram.ParseMode.MARKDOWN)
 
 
-if __name__ == "__main__":
-    entry()
+# if __name__ == "__main__":
+#     entry()
