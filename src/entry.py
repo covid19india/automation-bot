@@ -26,13 +26,14 @@ def entry(bot, update):
             print("final")
             print(text)
             if update.message.text.startswith("/ocr1"):
+                if len(text) < 4:
+                    return
                 photo = update.message.reply_to_message.photo[-1]
                 file_id = photo.file_id
                 newFile = bot.get_file(file_id)
                 newFile.download("/tmp/file.jpg")
                 print("File downloaded")
                 print(update.message.text)
-                
 
                 print(path)
                 # ./ocr.sh /tmp/file.jpg Bihar Araria True
@@ -44,11 +45,18 @@ def entry(bot, update):
                     chat_id=update.message.chat.id,
                     photo=open(path_ocr + "/image.png", "rb"),
                 )
+                # reply_markup = telegram.ReplyKeyboardMarkup([["/ocr2 " + text[1]]])
                 with open(path_ocr + "/output.txt") as f:
-                    bot.send_message(chat_id=update.message.chat.id, text=f.read())
+                    bot.send_message(
+                        chat_id=update.message.chat.id,
+                        text=f.read(),
+                        # reply_markup=reply_markup,
+                    )
                 os.remove("/tmp/file.jpg")
                 os.remove(path_ocr + "/output.txt")
             elif update.message.text.startswith("/ocr2"):
+                if len(text) < 2:
+                    return
                 output1 = update.message.reply_to_message.text
                 state_name = text[1]
                 print("Statename" + state_name)
@@ -62,14 +70,17 @@ def entry(bot, update):
                 )
                 try:
                     with open(path_automation + "/output2.txt") as f:
-                        bot.send_message(chat_id=update.message.chat.id, text=f.read())
+                        output2 = f.read()
+                        print(output2)
+                        bot.send_message(chat_id=update.message.chat.id, text=output2)
                     os.remove(path_automation + "/output2.txt")
                 except:
                     pass
         else:
-            message = "Not a command!"
+            # message = "Not a command!"
+            pass
         if message:
-            update.message.reply_text(message, parse_mode=telegram.ParseMode.MARKDOWN)
+            update.message.reply_text(message, parse_mode=telegram.ParseMode.MARKDOWN, reply_markup=telegram.ReplyKeyboardRemove())
 
 
 # if __name__ == "__main__":

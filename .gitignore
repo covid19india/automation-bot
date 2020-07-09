@@ -159,3 +159,6 @@ cython_debug/
 .vscode/
 
 visionapi.json
+
+bounds.txt
+ocrconfig.meta
