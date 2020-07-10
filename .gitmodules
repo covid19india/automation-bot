@@ -1,3 +1,4 @@
 [submodule "webScraper"]
 	path = webScraper
-	url = https://github.com/sudevschiz/webScraper
+	url = https://github.com/bee-rickey/webScraper
+	branch = master
