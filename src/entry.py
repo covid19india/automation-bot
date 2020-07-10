@@ -6,12 +6,15 @@ import shlex
 
 
 def entry(bot, update):
-    print(update)
+    # print(update)
     message = None
     path = os.path.abspath("")
     path_ocr = path + "/webScraper/automation/ocr"
     path_automation = path + "/webScraper/automation"
     ocr_log_file = open("/tmp/ocr.log", "w+")
+    # print(update.to_json())
+    ocr_log_file.write(update.to_json() + "\n\n-----------\n")
+    ocr_log_file.flush()
     if update.message:
         # Reply to the message
         if not update.message.text:
@@ -49,6 +52,7 @@ def entry(bot, update):
                     )
                 os.remove("/tmp/file.jpg")
                 os.remove(path_ocr + "/output.txt")
+                os.remove(path_ocr + "/image.png")
             elif update.message.text.startswith("/ocr2"):
                 if len(text) < 2:
                     return
@@ -82,13 +86,14 @@ def entry(bot, update):
                 message,
                 parse_mode=telegram.ParseMode.MARKDOWN,
                 reply_markup=telegram.ReplyKeyboardRemove(),
-            )
+            )   
+    ocr_log_file.close()
     with open("/tmp/ocr.log") as f:
         log_output = f.read()
-        print(log_output)
-        print("this is going to group")
+        # print(log_output)
+        # print("this is going to group")
         bot.send_message(chat_id="-1001429652488", text=log_output)
-    ocr_log_file.close()
+    
 
 
 # if __name__ == "__main__":
