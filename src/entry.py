@@ -12,15 +12,21 @@ def entry(bot, update):
     path_ocr = path + "/webScraper/automation/ocr"
     path_automation = path + "/webScraper/automation"
     ocr_log_file = open("/tmp/ocr.log", "w+")
-    # print(update.to_json())
-    ocr_log_file.write(update.to_json() + "\n\n-----------\n")
-    ocr_log_file.flush()
+    try:
+        res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
+        print(res)
+    except Exception as e:
+        print(e)
+        bot.send_message(chat_id="-1001429652488", text=str(e))
+        pass
     if update.message:
         # Reply to the message
         if not update.message.text:
             return
         if update.message.reply_to_message and update.message.text.startswith("/"):
-            bot.send_chat_action(chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING)
+            bot.send_chat_action(
+                chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
+            )
             text_prev = update.message.text
             text_replaced = text_prev.replace("“", '"').replace("”", '"')
             text = shlex.split(text_replaced)
@@ -31,19 +37,23 @@ def entry(bot, update):
                 file_id = photo.file_id
                 newFile = bot.get_file(file_id)
                 newFile.download("/tmp/file.jpg")
-                bot.send_chat_action(chat_id=update.message.chat.id, action=telegram.ChatAction.UPLOAD_PHOTO)
+                bot.send_chat_action(
+                    chat_id=update.message.chat.id,
+                    action=telegram.ChatAction.UPLOAD_PHOTO,
+                )
                 # ./ocr.sh /tmp/file.jpg Bihar Araria True
                 subprocess.call(
                     ["bash", "ocr.sh", "/tmp/file.jpg", text[1], text[2], text[3]],
                     cwd=path_ocr,
                     stdout=ocr_log_file,
+                    stderr=ocr_log_file,
                 )
                 bot.send_photo(
                     chat_id=update.message.chat.id,
                     photo=open(path_ocr + "/image.png", "rb"),
                 )
                 # reply_markup = telegram.ReplyKeyboardMarkup([["/ocr2 " + text[1]]])
-                
+
                 with open(path_ocr + "/output.txt") as f:
                     bot.send_message(
                         chat_id=update.message.chat.id,
@@ -67,6 +77,7 @@ def entry(bot, update):
                     ["bash", "ocr.sh", "", state_name, "", "", "ocr,table"],
                     cwd=path_ocr,
                     stdout=ocr_log_file,
+                    stderr=ocr_log_file,
                 )
                 try:
                     with open(path_automation + "/output2.txt") as f:
@@ -82,19 +93,18 @@ def entry(bot, update):
             # message = "Not a command!"
             pass
         if message:
-            update.message.reply_text(
-                message,
-                parse_mode=telegram.ParseMode.MARKDOWN,
-                reply_markup=telegram.ReplyKeyboardRemove(),
-            )   
+            try:
+                update.message.reply_text(
+                    message,
+                    parse_mode=telegram.ParseMode.MARKDOWN,
+                    reply_markup=telegram.ReplyKeyboardRemove(),
+                )
+            except Exception as e:
+                update.message.reply_text(str(e))
     ocr_log_file.close()
     with open("/tmp/ocr.log") as f:
         log_output = f.read()
-        # print(log_output)
-        # print("this is going to group")
-        bot.send_message(chat_id="-1001429652488", text=log_output)
-    
-
-
-# if __name__ == "__main__":
-#     entry()
+        try:
+            bot.send_message(chat_id="-1001429652488", text=log_output)
+        except Exception as e:
+            bot.send_message(chat_id="-1001429652488", text=str(e))
