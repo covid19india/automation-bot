@@ -105,6 +105,8 @@ def entry(bot, update):
     with open("/tmp/ocr.log") as f:
         log_output = f.read()
         try:
-            bot.send_message(chat_id="-1001429652488", text=log_output)
+            update.message.reply_text(log_output)
+            # bot.send_message(chat_id="-1001429652488", text=log_output)
         except Exception as e:
-            bot.send_message(chat_id="-1001429652488", text=str(e))
+            update.message.reply_text(str(e))
+            # bot.send_message(chat_id="-1001429652488", text=str(e))
