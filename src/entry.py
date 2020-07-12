@@ -15,7 +15,7 @@ def entry(bot, update):
 
     try:
         res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
-        print(res)
+        # print(res)
         pass
     except Exception as e:
         print(e)
@@ -23,9 +23,7 @@ def entry(bot, update):
         pass
     if update.callback_query:
         state_name = update.callback_query.data
-        print(state_name)
         photo = update.callback_query.message.reply_to_message.photo[-1]
-        print(photo)
         is_translation_req = False
         if state_name == "Bihar" or state_name == "Uttar Pradesh":
             is_translation_req = True
@@ -43,7 +41,6 @@ def entry(bot, update):
         if update.message.photo:
             button_list = []
             for key in state_dict:
-                # print(key)
                 button_list.append(
                     InlineKeyboardButton(state_dict[key], callback_data=state_dict[key])
                 )
