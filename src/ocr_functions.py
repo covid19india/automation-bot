@@ -10,11 +10,10 @@ path_automation = path + "/webScraper/automation"
 def send_log_to_user(bot, chat_id):
     with open("/tmp/ocr.log") as f:
         log_output = f.read()
-        try:
+        if len(log_output) > 4095:
+            bot.send_document(chat_id=chat_id, document=open("/tmp/ocr.log", "rb"))
+        else:
             bot.send_message(chat_id=chat_id, text=log_output)
-        except Exception as e:
-            bot.send_message(chat_id=chat_id, text=str(e))
-    pass
 
 
 def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
@@ -48,11 +47,15 @@ def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
 
     try:
         with open(path_ocr + "/output.txt") as f:
-            bot.send_message(
-                chat_id=chat_id,
-                text=f.read(),
-                # reply_markup=reply_markup,
-            )
+            content = f.read()
+            if len(content) > 4095:
+                bot.send_document(chat_id=chat_id, document=open("/tmp/ocr.log", "rb"))
+            else:
+                bot.send_message(
+                    chat_id=chat_id,
+                    text=content,
+                    # reply_markup=reply_markup,
+                )
         os.remove(path_ocr + "/output.txt")
         os.remove(path_ocr + "/image.png")
     except:
@@ -84,8 +87,13 @@ def ocr2(bot, chat_id, text, state_name):
     try:
         with open(path_automation + "/output2.txt") as f:
             output2 = f.read()
-            print(output2)
-            bot.send_message(chat_id=chat_id, text=output2)
+            if len(output2) > 4095:
+                bot.send_document(
+                    chat_id=chat_id,
+                    document=open(path_automation + "/output2.txt", "rb"),
+                )
+            else:
+                bot.send_message(chat_id=chat_id, text=output2)
         os.remove(path_automation + "/output2.txt")
     except:
         pass

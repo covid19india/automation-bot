@@ -11,7 +11,7 @@ import json
 
 
 def entry(bot, update):
-    print(json.dumps(update.to_dict(), indent=2))
+    # print(json.dumps(update.to_dict(), indent=2))
 
     try:
         res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
