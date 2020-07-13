@@ -7,11 +7,11 @@ path_ocr = path + "/webScraper/automation/ocr"
 path_automation = path + "/webScraper/automation"
 
 
-def send_log_to_user(bot, chat_id):
-    with open("/tmp/ocr.log") as f:
+def send_log_to_user(bot, chat_id, logname):
+    with open(logname) as f:
         log_output = f.read()
         if len(log_output) > 4095:
-            bot.send_document(chat_id=chat_id, document=open("/tmp/ocr.log", "rb"))
+            bot.send_document(chat_id=chat_id, document=open(logname, "rb"))
         else:
             bot.send_message(chat_id=chat_id, text=log_output)
 
@@ -66,7 +66,7 @@ def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
             # reply_markup=reply_markup,
         )
     ocr_log_file.close()
-    send_log_to_user(bot, chat_id)
+    send_log_to_user(bot, chat_id, logname="/tmp/ocr.log")
     os.remove("/tmp/file.jpg")
 
 
@@ -96,4 +96,61 @@ def ocr2(bot, chat_id, text, state_name):
     except:
         pass
     ocr_log_file.close()
-    send_log_to_user(bot, chat_id)
+    send_log_to_user(bot, chat_id, logname="/tmp/ocr.log")
+
+
+def pdf(bot, chat_id, url, state_name):
+    """
+    Run the pdf automation when pdf links are passed
+    """
+    pdf_log_file = "/tmp/pdf_output.txt"
+    pdf_err_file = "/tmp/pdf_err.txt"
+    # python3 automation.py Haryana full pdf=url
+    print(f"pdf={url}")
+    with open(pdf_log_file,'w') as log_file:
+        with open(pdf_err_file,'w') as err_file:
+            p = subprocess.Popen(
+                ["python3", "automation.py", state_name, "full", f"pdf={url}"],
+                cwd=path_automation,
+                stdout=log_file,
+                stderr=err_file,
+            )
+            p.communicate()
+
+    with open(pdf_log_file,'r') as log_file:
+        with open(pdf_err_file,'r') as err_file:
+            out = log_file.read()
+            err = err_file.read()
+            try:
+                # Send the errata
+                if (err is not None):
+                    print(err)
+                    if len(err) > 4095:
+                        bot.send_document(
+                            chat_id=chat_id,
+                            document=err_file
+                        )
+                    else:
+                        bot.send_message(chat_id=chat_id, text=str(err))
+                os.remove(pdf_err_file)
+            except Exception as e:
+                print("Expect" , str(e))
+                pass
+            
+            try:
+                # Send the results
+                if (out is not None):
+                    print(out)
+                    if(len(out)>4095):
+                        bot.send_document(
+                            chat_id=chat_id,
+                            document=log_file
+                        )
+                    else:
+                        bot.send_message(chat_id=chat_id, text=str(out))
+                    os.remove(pdf_log_file)
+            except Exception as e:
+                print("Expect" , str(e))
+                pass
+
+    # send_log_to_user(bot, chat_id, logname=pdf_log_file)

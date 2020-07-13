@@ -6,16 +6,14 @@ import os
 import shlex
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from src.util import build_menu, state_dict
-from src.ocr_functions import ocr1, ocr2
+from src.ocr_functions import ocr1, ocr2, pdf
 import json
 
 
 def entry(bot, update):
-    # print(json.dumps(update.to_dict(), indent=2))
-
     try:
         res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
-        # print(res)
+        # print(json.dumps(update.to_dict(), indent=2))
         pass
     except Exception as e:
         print(e)
@@ -55,6 +53,8 @@ def entry(bot, update):
         if not update.message.text:
             return
         message = None
+        if update.message.text.startswith("/test"):
+            message = "200 OK!"
         if update.message.reply_to_message and update.message.text.startswith("/"):
             bot.send_chat_action(
                 chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
@@ -76,6 +76,25 @@ def entry(bot, update):
                     update.message.reply_to_message.text,
                     text[1],
                 )
+            elif update.message.text.startswith("/pdf"):
+                if len(text) < 2:
+                    return
+                try:
+                    if update.message.reply_to_message.entities[0].type == 'url':
+                        text_prev = update.message.text
+                        text_replaced = text_prev.replace("“", '"').replace("”", '"')
+                        text = shlex.split(text_replaced)
+                        url = update.message.reply_to_message.text
+                        # Link passed. Call pdf automation
+                        pdf(
+                            bot,
+                            update.message.chat.id,
+                            url,
+                            text[1],
+                        )
+                except KeyError:
+                    update.message.reply_text("/pdf command need a downloadable link")
+                    pass
             elif update.message.text.startswith("/test"):
                 message = "200 OK!"
         else:
