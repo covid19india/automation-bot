@@ -73,8 +73,12 @@ def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
 def ocr2(bot, chat_id, text, state_name):
     ocr_log_file = open("/tmp/ocr.log", "w+")
     output1 = text
-    with open(path_ocr + "/output.txt", "w+") as f:
-        f.write(output1)
+    try:
+        with open(path_ocr + "/output.txt", "w+") as f:
+            f.write(output1)
+    except Exception as e:
+        print(e)
+        pass
     # ./ocr.sh ../../../b2.jpg Rajasthan AJMER False ocr,table
     subprocess.call(
         ["bash", "ocr.sh", "", state_name, "", "", "ocr,table"],
