@@ -38,6 +38,9 @@ jobs:
       run: pip install -r requirements.txt
     - name: Start Bot
       run: |
+        pushd webScraper
+        git checkout master
+        popd
         python start.py
       env:
           COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
