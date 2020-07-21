@@ -45,8 +45,9 @@ def main():
 
     while True:
         try:
-            for update in bot.get_updates(offset=update_id, timeout=60):
+            for update in bot.get_updates(offset=update_id, timeout=10):
                 update_id = update.update_id + 1
+                logging.info(f"Update ID:{update_id}")
                 entry(bot, update)
         except NetworkError:
             sleep(1)

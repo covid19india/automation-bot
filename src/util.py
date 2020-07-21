@@ -7,26 +7,35 @@ def build_menu(buttons, n_cols, header_buttons=None, footer_buttons=None):
     return menu
 
 
-state_dict = {
+ocr_dict = {
     "AP": "Andhra Pradesh",
     "BR": "Bihar",
     "CT": "Chhattisgarh",
-    "HR": "Haryana",
     "HP": "Himachal Pradesh",
     "JK": "Jammu and Kashmir",
     "JH": "Jharkhand",
-    "KA": "Karnataka",
-    "LA": "Ladakh",
     "MP": "Madhya Pradesh",
     "MH": "Maharashtra",
-    "OR": "Odisha",
-    "PB": "Punjab",
     "RJ": "Rajasthan",
-    "SK": "Sikkim",
-    "TN": "Tamil Nadu",
-    "TR": "Tripura",
     "UP": "Uttar Pradesh",
     "UT": "Uttarakhand",
-    # "WB": "West Bengal", # requires additional input it seems
 }
+
+
+pdf_dict = {
+    "HR": "Haryana",
+    "KA": "Karnataka",
+    "PB": "Punjab",
+    "TN": "Tamil Nadu",
+    "WB": "West Bengal", 
+}
+
+dash_dict = {
+    "AP": "Andhra Pradesh",
+    "LA": "Ladakh",
+    "MH": "Maharashtra",
+    "OR": "Odisha",
+    "TR": "Tripura",
+}
+
 

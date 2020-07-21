@@ -87,7 +87,7 @@ def ocr2(bot, chat_id, text, state_name):
                 cwd=path_ocr,
                 stdout=ocr_log_file,
                 stderr=ocr_log_file,
-                timeout=60
+                timeout=10
             )
         except subprocess.TimeoutExpired:
             e = 'Request timed out'
@@ -110,7 +110,7 @@ def ocr2(bot, chat_id, text, state_name):
         send_log_to_user(bot, chat_id, logname="/tmp/ocr.log")
 
 
-def pdf(bot, chat_id, url, state_name):
+def pdf(bot, chat_id, state_name, url, page_num):
     """
     Run the pdf automation when pdf links are passed
     """
@@ -120,16 +120,21 @@ def pdf(bot, chat_id, url, state_name):
     logging.info(f"pdf={url}")
     with open(pdf_log_file,'w') as log_file:
         with open(pdf_err_file,'w') as err_file:
+            bot.send_chat_action(
+                chat_id=chat_id, action=telegram.ChatAction.TYPING
+            )
             p = subprocess.Popen(
                 ["python3", "automation.py", state_name, "full", f"pdf={url}"],
                 cwd=path_automation,
                 stdout=log_file,
                 stderr=err_file,
+                stdin=subprocess.PIPE,
+                encoding='utf8'
             )
-            p.communicate()
+            p.communicate(input=str(page_num))
 
-    with open(pdf_log_file,'r') as log_file:
-        with open(pdf_err_file,'r') as err_file:
+    with open(pdf_log_file,'rb') as log_file:
+        with open(pdf_err_file,'rb') as err_file:
             out = log_file.read()
             err = err_file.read()
             try:
@@ -141,7 +146,7 @@ def pdf(bot, chat_id, url, state_name):
                             document=err_file
                         )
                     else:
-                        bot.send_message(chat_id=chat_id, text=str(err))
+                        bot.send_message(chat_id=chat_id, text=err.decode("utf-8"))
                 os.remove(pdf_err_file)
             except Exception as e:
                 logging.error(e)
@@ -150,17 +155,73 @@ def pdf(bot, chat_id, url, state_name):
             try:
                 # Send the results
                 if (out is not None):
-                    print(out)
                     if(len(out)>4095):
+                        log_file.seek(0)
                         bot.send_document(
                             chat_id=chat_id,
                             document=log_file
                         )
                     else:
-                        bot.send_message(chat_id=chat_id, text=str(out))
+                        bot.send_message(chat_id=chat_id, text=out.decode("utf-8"))
                     os.remove(pdf_log_file)
             except Exception as e:
                 logging.error(e)
                 pass
 
-    # send_log_to_user(bot, chat_id, logname=pdf_log_file)
+def dashboard(bot, chat_id, state_name):
+    """
+    Run the pdf automation when pdf links are passed
+    """
+    dash_log_file = "/tmp/dash_output.txt"
+    dash_err_file = "/tmp/dash_err.txt"
+    # python3 automation.py Tripura full
+
+    logging.info(f"Dashboard fetch for {state_name}")
+    with open(dash_log_file,'w') as log_file:
+        with open(dash_err_file,'w') as err_file:
+            bot.send_chat_action(
+                chat_id=chat_id, action=telegram.ChatAction.TYPING
+            )
+            p = subprocess.Popen(
+                ["python3", "automation.py", state_name, "full"],
+                cwd=path_automation,
+                stdout=log_file,
+                stderr=err_file,
+                encoding='utf8'
+            )
+            p.communicate()
+
+    with open(dash_log_file,'rb') as log_file:
+        with open(dash_err_file,'rb') as err_file:
+            out = log_file.read()
+            err = err_file.read()
+            try:
+                # Send the errata
+                if (err is not None):
+                    if len(err) > 4095:
+                        bot.send_document(
+                            chat_id=chat_id,
+                            document=err_file
+                        )
+                    else:
+                        bot.send_message(chat_id=chat_id, text=err.decode("utf-8"))
+                os.remove(dash_err_file)
+            except Exception as e:
+                logging.error(e)
+                pass
+            
+            try:
+                # Send the results
+                if (out is not None):
+                    if(len(out)>4095):
+                        log_file.seek(0)
+                        bot.send_document(
+                            chat_id=chat_id,
+                            document=log_file
+                        )
+                    else:
+                        bot.send_message(chat_id=chat_id, text=out.decode("utf-8"))
+                    os.remove(dash_log_file)
+            except Exception as e:
+                logging.error(e)
+                pass
