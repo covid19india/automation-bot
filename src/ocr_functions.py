@@ -1,6 +1,7 @@
 import subprocess
 import telegram
 import os
+import logging
 
 path = os.path.abspath("")
 path_ocr = path + "/webScraper/automation/ocr"
@@ -59,7 +60,7 @@ def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
         os.remove(path_ocr + "/output.txt")
         os.remove(path_ocr + "/image.png")
     except:
-        print("File do not exist")
+        logging.info("File do not exist")
         bot.send_message(
             chat_id=chat_id,
             text="Picked the wrong state? :/",
@@ -71,36 +72,42 @@ def ocr1(bot, chat_id, photo, state_name, dist_name, is_translation_req=False):
 
 
 def ocr2(bot, chat_id, text, state_name):
-    ocr_log_file = open("/tmp/ocr.log", "w+")
-    output1 = text
-    try:
-        with open(path_ocr + "/output.txt", "w+") as f:
-            f.write(output1)
-    except Exception as e:
-        print(e)
-        pass
-    # ./ocr.sh ../../../b2.jpg Rajasthan AJMER False ocr,table
-    subprocess.call(
-        ["bash", "ocr.sh", "", state_name, "", "", "ocr,table"],
-        cwd=path_ocr,
-        stdout=ocr_log_file,
-        stderr=ocr_log_file,
-    )
-    try:
-        with open(path_automation + "/output2.txt") as f:
-            output2 = f.read()
-            if len(output2) > 4095:
-                bot.send_document(
-                    chat_id=chat_id,
-                    document=open(path_automation + "/output2.txt", "rb"),
-                )
-            else:
-                bot.send_message(chat_id=chat_id, text=output2)
-        os.remove(path_automation + "/output2.txt")
-    except:
-        pass
-    ocr_log_file.close()
-    send_log_to_user(bot, chat_id, logname="/tmp/ocr.log")
+    with open("/tmp/ocr.log", "w+") as ocr_log_file:
+        output1 = text
+        try:
+            with open(path_ocr + "/output.txt", "w+") as f:
+                f.write(output1)
+        except Exception as e:
+            logging.error(e)
+            pass
+        # ./ocr.sh ../../../b2.jpg Rajasthan AJMER False ocr,table
+        try:
+            subprocess.run(
+                ["bash", "ocr.sh", "", state_name, "", "", "ocr,table"],
+                cwd=path_ocr,
+                stdout=ocr_log_file,
+                stderr=ocr_log_file,
+                timeout=60
+            )
+        except subprocess.TimeoutExpired:
+            e = 'Request timed out'
+            logging.error(e)
+            bot.send_message(chat_id=chat_id, text=e)
+            return
+        try:
+            with open(path_automation + "/output2.txt") as f:
+                output2 = f.read()
+                if len(output2) > 4095:
+                    bot.send_document(
+                        chat_id=chat_id,
+                        document=open(path_automation + "/output2.txt", "rb"),
+                    )
+                else:
+                    bot.send_message(chat_id=chat_id, text=output2)
+            os.remove(path_automation + "/output2.txt")
+        except:
+            pass
+        send_log_to_user(bot, chat_id, logname="/tmp/ocr.log")
 
 
 def pdf(bot, chat_id, url, state_name):
@@ -110,7 +117,7 @@ def pdf(bot, chat_id, url, state_name):
     pdf_log_file = "/tmp/pdf_output.txt"
     pdf_err_file = "/tmp/pdf_err.txt"
     # python3 automation.py Haryana full pdf=url
-    print(f"pdf={url}")
+    logging.info(f"pdf={url}")
     with open(pdf_log_file,'w') as log_file:
         with open(pdf_err_file,'w') as err_file:
             p = subprocess.Popen(
@@ -128,7 +135,6 @@ def pdf(bot, chat_id, url, state_name):
             try:
                 # Send the errata
                 if (err is not None):
-                    print(err)
                     if len(err) > 4095:
                         bot.send_document(
                             chat_id=chat_id,
@@ -138,7 +144,7 @@ def pdf(bot, chat_id, url, state_name):
                         bot.send_message(chat_id=chat_id, text=str(err))
                 os.remove(pdf_err_file)
             except Exception as e:
-                print("Expect" , str(e))
+                logging.error(e)
                 pass
             
             try:
@@ -154,7 +160,7 @@ def pdf(bot, chat_id, url, state_name):
                         bot.send_message(chat_id=chat_id, text=str(out))
                     os.remove(pdf_log_file)
             except Exception as e:
-                print("Expect" , str(e))
+                logging.error(e)
                 pass
 
     # send_log_to_user(bot, chat_id, logname=pdf_log_file)
