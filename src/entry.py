@@ -12,12 +12,12 @@ import json
 
 def entry(bot, update):
     try:
-        res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
+        # res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
         # print(json.dumps(update.to_dict(), indent=2))
         pass
     except Exception as e:
         print(e)
-        bot.send_message(chat_id="-1001429652488", text=str(e))
+        # bot.send_message(chat_id="-1001429652488", text=str(e))
         pass
 
     if update.callback_query:
@@ -101,13 +101,6 @@ def entry(bot, update):
         except IndexError:
             pass
 
-        if update.message.text.startswith("/test"):
-            update.message.reply_text(
-                "200 OK!",
-                parse_mode=telegram.ParseMode.MARKDOWN
-                )
-            return
-
         if update.message.text.startswith("/dashboard"):
             bot.send_chat_action(
                 chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
@@ -124,6 +117,43 @@ def entry(bot, update):
                 reply_to_message_id=update.message.message_id,
                 reply_markup=reply_markup,
             )
+            return
+
+
+        if update.message.text.startswith("/test"):
+            update.message.reply_text(
+                "200 OK!",
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
+            return
+
+        if update.message.text.startswith("/pdf"):
+            update.message.reply_text(
+                str('''Reply to a URL with \n`/pdf "Haryana" 3`'''),
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
+            return            
+
+        if update.message.text.startswith("/help") or update.message.text.startswith("/start"):
+            help_text =f'''
+            \n*OCR*
+            - Send the bulletin image to do OCR
+            - Errors and the results would be returned
+            - If there are errors, copy the extracted text and make corrections.
+            - Send it back to the text
+            - Reply to the message with `/ocr2 "Madhya Pradesh"`
+            \n*PDF*
+            - Send the URL of the pdf bulletin
+            - Choose the state. Default page number is 2.
+            - For using different page number, use the command like below
+            - `/pdf "Punjab" 3`
+            \n*DASHBOARD*
+            - `/dashboard`
+            - Choose the state'''
+            update.message.reply_text(
+                str(help_text),
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
             return
 
         if update.message.reply_to_message and update.message.text.startswith("/"):
@@ -159,10 +189,11 @@ def entry(bot, update):
                     pdf(
                         bot, update.message.chat.id, text[1], url, text[2]
                     )
-                except:
+                except Exception as e:
                     update.message.reply_text(
-                        "`/pdf <state name> <page number>`",
+                        str('''Reply to the pdf URL with\n`/pdf <state name> <page number>`'''),
                         parse_mode=telegram.ParseMode.MARKDOWN)
+                    print(e)
                     pass
 
                 return
