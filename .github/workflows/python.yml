@@ -33,7 +33,7 @@ jobs:
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
     - name: Install OS dependencies
-      run: sudo apt install build-essential libpoppler-cpp-dev pkg-config
+      run: sudo apt update && sudo apt install build-essential libpoppler-cpp-dev pkg-config locales
     - name: Install Python dependencies
       run: pip install -r requirements.txt
     - name: Start Bot
@@ -43,6 +43,7 @@ jobs:
         popd
         python start.py
       env:
+          LANG: "en_US.UTF-8"
           COVID_BOT_TOKEN: ${{ secrets.COVID_BOT_TOKEN }}
           VISIONAPI_TOKEN: ${{ secrets.VISIONAPI_TOKEN }}
           UPDATE_ID: ${{ github.event.client_payload.update_id }}
