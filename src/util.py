@@ -32,6 +32,7 @@ pdf_dict = {
 
 dash_dict = {
     "AP": "Andhra Pradesh",
+    "KL": "Kerala"
     "LA": "Ladakh",
     "MH": "Maharashtra",
     "OR": "Odisha",
