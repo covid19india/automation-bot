@@ -127,44 +127,6 @@ def entry(bot, update):
             return
 
 
-        if update.message.text.startswith("/test"):
-            update.message.reply_text(
-                "200 OK!",
-                parse_mode=telegram.ParseMode.MARKDOWN
-                )
-            return
-
-        if update.message.text.startswith("/pdf"):
-            update.message.reply_text(
-                str('''Reply to a URL with \n`/pdf "Haryana" 3`'''),
-                parse_mode=telegram.ParseMode.MARKDOWN
-                )
-            return            
-
-        if update.message.text.startswith("/help") or update.message.text.startswith("/start"):
-            help_text =f'''
-            \n*OCR*
-            - Send the bulletin image to do OCR
-            - Errors and the results would be returned
-            - If there are errors, copy the extracted text and make corrections.
-            - Send it back to the text
-            - Reply to the message with `/ocr2 "Madhya Pradesh"`
-            \n*PDF*
-            - Send the URL of the pdf bulletin
-            - Choose the state. Default page number is 2.
-            - For using different page number, use the command like below
-            - `/pdf "Punjab" 3`
-            \n*DASHBOARD*
-            - `/dashboard`
-            - Choose the state
-            \n\n_Send `/test` for checking if the bot is online_'''
-
-            update.message.reply_text(
-                str(help_text),
-                parse_mode=telegram.ParseMode.MARKDOWN
-                )
-            return
-
         if update.message.reply_to_message and update.message.text.startswith("/"):
             bot.send_chat_action(
                 chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
@@ -211,13 +173,42 @@ def entry(bot, update):
                 message = "200 OK!"
                 return
                 
-        # if message:
-        #     try:
-        #         update.message.reply_text(
-        #             message,
-        #             parse_mode=telegram.ParseMode.MARKDOWN,
-        #             reply_markup=telegram.ReplyKeyboardRemove(),
-        #         )
-        #     except Exception as e:
-        #         update.message.reply_text(str(e))
+
+        if update.message.text.startswith("/test"):
+            update.message.reply_text(
+                "200 OK!",
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
+            return
+
+        if update.message.text.startswith("/pdf"):
+            update.message.reply_text(
+                str('''Reply to a URL with \n`/pdf "Haryana" 3`'''),
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
+            return            
+
+        if update.message.text.startswith("/help") or update.message.text.startswith("/start"):
+            help_text =f'''
+            \n*OCR*
+            - Send the bulletin image to do OCR
+            - Errors and the results would be returned
+            - If there are errors, copy the extracted text and make corrections.
+            - Send it back to the text
+            - Reply to the message with `/ocr2 "Madhya Pradesh"`
+            \n*PDF*
+            - Send the URL of the pdf bulletin
+            - Choose the state. Default page number is 2.
+            - For using different page number, use the command like below
+            - `/pdf "Punjab" 3`
+            \n*DASHBOARD*
+            - `/dashboard`
+            - Choose the state
+            \n\n_Send `/test` for checking if the bot is online_'''
+
+            update.message.reply_text(
+                str(help_text),
+                parse_mode=telegram.ParseMode.MARKDOWN
+                )
+            return
 
