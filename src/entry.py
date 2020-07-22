@@ -100,22 +100,29 @@ def entry(bot, update):
                 return
         except IndexError:
             pass
-
-        if update.message.text.startswith("/dashboard"):
-            bot.send_chat_action(
-                chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
-            )
-            button_list = []
-            for key in dash_dict:
-                button_list.append(
-                    InlineKeyboardButton(dash_dict[key], callback_data=dash_dict[key])
+        
+        try:
+            if update.message.text.startswith("/dashboard"):
+                bot.send_chat_action(
+                    chat_id=update.message.chat.id, action=telegram.ChatAction.TYPING
                 )
-            reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=3))
+                button_list = []
+                for key in dash_dict:
+                    button_list.append(
+                        InlineKeyboardButton(dash_dict[key], callback_data=dash_dict[key])
+                    )
+                reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=3))
+                bot.send_message(
+                    chat_id=update.message.chat.id,
+                    text="Which state's dashboard do you want to fetch?",
+                    reply_to_message_id=update.message.message_id,
+                    reply_markup=reply_markup,
+                )
+                return
+        except:
             bot.send_message(
-                chat_id=update.message.chat.id,
-                text="Which state's dashboard do you want to fetch?",
-                reply_to_message_id=update.message.message_id,
-                reply_markup=reply_markup,
+            chat_id=update.message.chat.id,
+            text="Something wrong.. :/"
             )
             return
 
@@ -149,7 +156,9 @@ def entry(bot, update):
             - `/pdf "Punjab" 3`
             \n*DASHBOARD*
             - `/dashboard`
-            - Choose the state'''
+            - Choose the state
+            \n\n_Send `/test` for checking if the bot is online_'''
+
             update.message.reply_text(
                 str(help_text),
                 parse_mode=telegram.ParseMode.MARKDOWN
