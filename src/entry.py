@@ -12,12 +12,12 @@ import json
 
 def entry(bot, update):
     try:
-        # res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
+        res = bot.send_message(chat_id="-1001429652488", text=update.to_json())
         # print(json.dumps(update.to_dict(), indent=2))
         pass
     except Exception as e:
         print(e)
-        # bot.send_message(chat_id="-1001429652488", text=str(e))
+        bot.send_message(chat_id="-1001429652488", text=str(e))
         pass
 
     if update.callback_query:
