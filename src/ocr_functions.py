@@ -183,7 +183,7 @@ def dashboard(bot, chat_id, state_name):
                 bot.send_chat_action(
                     chat_id=chat_id, action=telegram.ChatAction.TYPING
                 )
-                p = subprocess.Popen(
+                p = subprocess.run(
                     ["python3", "automation.py", state_name, "full"],
                     cwd=path_automation,
                     stdout=log_file,
@@ -191,7 +191,7 @@ def dashboard(bot, chat_id, state_name):
                     encoding='utf8',
                     timeout=20
                 )
-                p.communicate()
+                
     except subprocess.TimeoutExpired:
         e = 'Request timed out'
         logging.error(e)
