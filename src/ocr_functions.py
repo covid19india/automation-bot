@@ -87,7 +87,7 @@ def ocr2(bot, chat_id, text, state_name):
                 cwd=path_ocr,
                 stdout=ocr_log_file,
                 stderr=ocr_log_file,
-                timeout=10
+                timeout=20
             )
         except subprocess.TimeoutExpired:
             e = 'Request timed out'
@@ -177,19 +177,26 @@ def dashboard(bot, chat_id, state_name):
     # python3 automation.py Tripura full
 
     logging.info(f"Dashboard fetch for {state_name}")
-    with open(dash_log_file,'w') as log_file:
-        with open(dash_err_file,'w') as err_file:
-            bot.send_chat_action(
-                chat_id=chat_id, action=telegram.ChatAction.TYPING
-            )
-            p = subprocess.Popen(
-                ["python3", "automation.py", state_name, "full"],
-                cwd=path_automation,
-                stdout=log_file,
-                stderr=err_file,
-                encoding='utf8'
-            )
-            p.communicate()
+    try:
+        with open(dash_log_file,'w') as log_file:
+            with open(dash_err_file,'w') as err_file:
+                bot.send_chat_action(
+                    chat_id=chat_id, action=telegram.ChatAction.TYPING
+                )
+                p = subprocess.Popen(
+                    ["python3", "automation.py", state_name, "full"],
+                    cwd=path_automation,
+                    stdout=log_file,
+                    stderr=err_file,
+                    encoding='utf8',
+                    timeout=20
+                )
+                p.communicate()
+    except subprocess.TimeoutExpired:
+        e = 'Request timed out'
+        logging.error(e)
+        bot.send_message(chat_id=chat_id, text=e)
+        return
 
     with open(dash_log_file,'rb') as log_file:
         with open(dash_err_file,'rb') as err_file:
