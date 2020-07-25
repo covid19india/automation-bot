@@ -25,7 +25,7 @@ def entry(bot, update):
             state_name = update.callback_query.data
             photo = update.callback_query.message.reply_to_message.photo[-1]
             is_translation_req = False
-            if state_name == "Bihar" or state_name == "Uttar Pradesh":
+            if state_name == "Bihar" or state_name == "Uttar Pradesh" or state_name == "Chhattisgarh":
                 is_translation_req = True
             ocr1(
                 bot,
