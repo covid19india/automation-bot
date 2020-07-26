@@ -36,6 +36,7 @@ dash_dict = {
     "KL": "Kerala",
     "LA": "Ladakh",
     "MH": "Maharashtra",
+    "ML": "Meghalaya",
     "OR": "Odisha",
     "TR": "Tripura",
 }
