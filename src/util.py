@@ -16,6 +16,7 @@ ocr_dict = {
     "JH": "Jharkhand",
     "MP": "Madhya Pradesh",
     "MH": "Maharashtra",
+    "PB": "Punjab",
     "RJ": "Rajasthan",
     "UP": "Uttar Pradesh",
     "UT": "Uttarakhand",
