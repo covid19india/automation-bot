@@ -124,7 +124,7 @@ def pdf(bot, chat_id, state_name, url, page_num):
                 chat_id=chat_id, action=telegram.ChatAction.TYPING
             )
             p = subprocess.Popen(
-                ["python3", "automation.py", state_name, "full", f"pdf={url}"],
+                ["python3", "automation.py", state_name, "full", f"pdf={url}={page_num}"],
                 cwd=path_automation,
                 stdout=log_file,
                 stderr=err_file,

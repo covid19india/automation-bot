@@ -93,7 +93,7 @@ def entry(bot, update):
                 reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=3))
                 bot.send_message(
                     chat_id=update.message.chat.id,
-                    text="Which state's PDF bulletin is this?",
+                    text='''Which state's PDF bulletin is this?\n\nNote that default page number used is 2. If a different page number needs to be used, say 3 for WB bulletin, reply to the URL message you sent with : /pdf "West Bengal" 3''',
                     reply_to_message_id=update.message.message_id,
                     reply_markup=reply_markup,
                 )
