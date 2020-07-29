@@ -38,12 +38,12 @@ jobs:
       run: pip install -r requirements.txt
     - name: Start Bot
       run: |
+        pushd webScraper
         git rev-parse --short HEAD
         git submodule update --init --recursive
-        pushd webScraper
+        git rev-parse --short HEAD
         git checkout master
         popd
-        git rev-parse --short HEAD
         python start.py
       env:
           LANG: "en_US.UTF-8"
