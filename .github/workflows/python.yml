@@ -39,7 +39,7 @@ jobs:
     - name: Start Bot
       run: |
         git rev-parse --short HEAD
-        git submodules update --init --recursive
+        git submodule update --init --recursive
         pushd webScraper
         git checkout master
         popd
