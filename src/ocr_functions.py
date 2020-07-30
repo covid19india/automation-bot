@@ -92,7 +92,7 @@ def ocr2(bot, chat_id, text, state_name):
         except subprocess.TimeoutExpired:
             e = "Request timed out"
             logging.error(e)
-            bot.send_message(chat_id=chat_id, text="Wrong command?")
+            bot.send_message(chat_id=chat_id, text=e)
             return
         try:
             with open(path_automation + "/output2.txt") as f:

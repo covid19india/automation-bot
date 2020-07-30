@@ -144,7 +144,7 @@ def entry(bot, update):
             except Exception as e:
                 bot.send_message(
                     chat_id=update.message.chat.id,
-                    text=e,
+                    text="Wrong command?",
                     reply_to_message_id=update.message.message_id,
                 )
 
