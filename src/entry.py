@@ -147,6 +147,7 @@ def entry(bot, update):
                     text="Wrong command?",
                     reply_to_message_id=update.message.message_id,
                 )
+                return
 
             if update.message.text.startswith("/ocr1"):
                 if len(text) < 4:
