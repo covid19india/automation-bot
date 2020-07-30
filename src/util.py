@@ -28,7 +28,7 @@ pdf_dict = {
     "KA": "Karnataka",
     "PB": "Punjab",
     "TN": "Tamil Nadu",
-    "WB": "West Bengal", 
+    "WB": "West Bengal",
 }
 
 dash_dict = {
@@ -42,5 +42,4 @@ dash_dict = {
     "OR": "Odisha",
     "TR": "Tripura",
 }
-
 

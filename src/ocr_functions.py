@@ -87,10 +87,10 @@ def ocr2(bot, chat_id, text, state_name):
                 cwd=path_ocr,
                 stdout=ocr_log_file,
                 stderr=ocr_log_file,
-                timeout=20
+                timeout=20,
             )
         except subprocess.TimeoutExpired:
-            e = 'Request timed out'
+            e = "Request timed out"
             logging.error(e)
             bot.send_message(chat_id=chat_id, text=e)
             return
@@ -118,55 +118,54 @@ def pdf(bot, chat_id, state_name, url, page_num):
     pdf_err_file = "/tmp/pdf_err.txt"
     # python3 automation.py Haryana full pdf=url
     logging.info(f"pdf={url}")
-    with open(pdf_log_file,'w') as log_file:
-        with open(pdf_err_file,'w') as err_file:
-            bot.send_chat_action(
-                chat_id=chat_id, action=telegram.ChatAction.TYPING
-            )
+    with open(pdf_log_file, "w") as log_file:
+        with open(pdf_err_file, "w") as err_file:
+            bot.send_chat_action(chat_id=chat_id, action=telegram.ChatAction.TYPING)
             p = subprocess.Popen(
-                ["python3", "automation.py", state_name, "full", f"pdf={url}={page_num}"],
+                [
+                    "python3",
+                    "automation.py",
+                    state_name,
+                    "full",
+                    f"pdf={url}={page_num}",
+                ],
                 cwd=path_automation,
                 stdout=log_file,
                 stderr=err_file,
                 stdin=subprocess.PIPE,
-                encoding='utf8'
+                encoding="utf8",
             )
             p.communicate(input=str(page_num))
 
-    with open(pdf_log_file,'rb') as log_file:
-        with open(pdf_err_file,'rb') as err_file:
+    with open(pdf_log_file, "rb") as log_file:
+        with open(pdf_err_file, "rb") as err_file:
             out = log_file.read()
             err = err_file.read()
             try:
                 # Send the errata
-                if (err is not None):
+                if err is not None:
                     if len(err) > 4095:
-                        bot.send_document(
-                            chat_id=chat_id,
-                            document=err_file
-                        )
+                        bot.send_document(chat_id=chat_id, document=err_file)
                     else:
                         bot.send_message(chat_id=chat_id, text=err.decode("utf-8"))
                 os.remove(pdf_err_file)
             except Exception as e:
                 logging.error(e)
                 pass
-            
+
             try:
                 # Send the results
-                if (out is not None):
-                    if(len(out)>4095):
+                if out is not None:
+                    if len(out) > 4095:
                         log_file.seek(0)
-                        bot.send_document(
-                            chat_id=chat_id,
-                            document=log_file
-                        )
+                        bot.send_document(chat_id=chat_id, document=log_file)
                     else:
                         bot.send_message(chat_id=chat_id, text=out.decode("utf-8"))
                     os.remove(pdf_log_file)
             except Exception as e:
                 logging.error(e)
                 pass
+
 
 def dashboard(bot, chat_id, state_name):
     """
@@ -178,54 +177,46 @@ def dashboard(bot, chat_id, state_name):
 
     logging.info(f"Dashboard fetch for {state_name}")
     try:
-        with open(dash_log_file,'w') as log_file:
-            with open(dash_err_file,'w') as err_file:
-                bot.send_chat_action(
-                    chat_id=chat_id, action=telegram.ChatAction.TYPING
-                )
+        with open(dash_log_file, "w") as log_file:
+            with open(dash_err_file, "w") as err_file:
+                bot.send_chat_action(chat_id=chat_id, action=telegram.ChatAction.TYPING)
                 p = subprocess.run(
                     ["python3", "automation.py", state_name, "full"],
                     cwd=path_automation,
                     stdout=log_file,
                     stderr=err_file,
-                    encoding='utf8',
-                    timeout=20
+                    encoding="utf8",
+                    timeout=20,
                 )
-                
+
     except subprocess.TimeoutExpired:
-        e = 'Request timed out'
+        e = "Request timed out"
         logging.error(e)
         bot.send_message(chat_id=chat_id, text=e)
         return
 
-    with open(dash_log_file,'rb') as log_file:
-        with open(dash_err_file,'rb') as err_file:
+    with open(dash_log_file, "rb") as log_file:
+        with open(dash_err_file, "rb") as err_file:
             out = log_file.read()
             err = err_file.read()
             try:
                 # Send the errata
-                if (err is not None):
+                if err is not None:
                     if len(err) > 4095:
-                        bot.send_document(
-                            chat_id=chat_id,
-                            document=err_file
-                        )
+                        bot.send_document(chat_id=chat_id, document=err_file)
                     else:
                         bot.send_message(chat_id=chat_id, text=err.decode("utf-8"))
                 os.remove(dash_err_file)
             except Exception as e:
                 logging.error(e)
                 pass
-            
+
             try:
                 # Send the results
-                if (out is not None):
-                    if(len(out)>4095):
+                if out is not None:
+                    if len(out) > 4095:
                         log_file.seek(0)
-                        bot.send_document(
-                            chat_id=chat_id,
-                            document=log_file
-                        )
+                        bot.send_document(chat_id=chat_id, document=log_file)
                     else:
                         bot.send_message(chat_id=chat_id, text=out.decode("utf-8"))
                     os.remove(dash_log_file)

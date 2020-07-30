@@ -11,9 +11,10 @@ from src.entry import entry
 import json
 
 logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s %(message)s',
+    format="%(asctime)s %(levelname)-8s %(message)s",
     level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 try:
     COVID_BOT_TOKEN = os.environ["COVID_BOT_TOKEN"]
@@ -23,17 +24,18 @@ try:
     # If the token is available in the environment,
     # print it to a file
     VISIONAPI_TOKEN = os.environ["VISIONAPI_TOKEN"]
-    with open('visionapi.json','w') as f:
-        print(VISIONAPI_TOKEN,file=f)
+    with open("visionapi.json", "w") as f:
+        print(VISIONAPI_TOKEN, file=f)
 except KeyError:
     logging.error("VisionAPI credentials not found in environment")
 
 # How long the container exist
 LIFESPAN = 3600
 
+
 def main():
-    """Run the bot."""  
-      
+    """Run the bot."""
+
     try:
         update_id = int(os.environ["UPDATE_ID"])
     except:
@@ -59,6 +61,7 @@ def main():
             with open("/tmp/update_id", "w") as the_file:
                 the_file.write(str(update_id))
             break
+
 
 if __name__ == "__main__":
     main()
