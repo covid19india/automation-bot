@@ -1,6 +1,5 @@
 from os import stat
 import telegram
-from src.bulletin import Bulletin
 import subprocess
 import os
 import shlex
