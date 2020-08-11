@@ -40,6 +40,7 @@ dash_dict = {
     "MH": "Maharashtra",
     "ML": "Meghalaya",
     "OR": "Odisha",
+    "PY": "Puducherry",
     "TR": "Tripura",
 }
 
