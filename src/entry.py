@@ -7,6 +7,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from src.util import build_menu, ocr_dict, pdf_dict, dash_dict
 from src.ocr_functions import ocr1, ocr2, pdf, dashboard
 import json
+import logging
 
 
 def entry(bot, update):
@@ -15,7 +16,7 @@ def entry(bot, update):
         # print(json.dumps(update.to_dict(), indent=2))
         pass
     except Exception as e:
-        print(e)
+        logging.error(e)
         bot.send_message(chat_id="-1001429652488", text=str(e))
         pass
 
@@ -56,7 +57,7 @@ def entry(bot, update):
                     chat_id=update.callback_query.message.chat.id,
                     text="PDF extraction failed",
                 )
-                print(e)
+                logging.error(e)
 
         elif update.callback_query.message.reply_to_message.text == "/dashboard":
             state_name = update.callback_query.data
@@ -67,7 +68,7 @@ def entry(bot, update):
                     chat_id=update.callback_query.message.chat.id,
                     text="Dash fetch failed",
                 )
-                print(e)
+                logging.error(e)
 
             return
 
@@ -180,7 +181,7 @@ def entry(bot, update):
                         ),
                         parse_mode=telegram.ParseMode.MARKDOWN,
                     )
-                    print(e)
+                    logging.error(e)
                     pass
 
                 return
