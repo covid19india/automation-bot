@@ -25,18 +25,24 @@ def entry(bot, update):
             state_name = update.callback_query.data
             photo = update.callback_query.message.reply_to_message.photo[-1]
             is_translation_req = False
+            start_end_districts = "auto,auto"
+            
             if (
                 state_name == "Bihar"
                 or state_name == "Uttar Pradesh"
                 or state_name == "Chhattisgarh"
             ):
                 is_translation_req = True
+
+            if(state_name == "Arunachal Pradesh"):
+                start_end_districts = "Anjaw"
+
             ocr1(
                 bot,
                 update.callback_query.message.chat.id,
                 photo,
                 state_name,
-                "auto,auto",
+                start_end_districts,
                 is_translation_req,
             )
         elif update.callback_query.message.reply_to_message.entities[0].type == "url":
