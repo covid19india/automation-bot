@@ -133,7 +133,7 @@ def pdf(bot, chat_id, state_name, url, page_num):
                 stdout=log_file,
                 stderr=err_file,
                 stdin=subprocess.PIPE,
-                # encoding="utf8",
+                encoding="utf8",
             )
             p.communicate(input=str(page_num))
 
