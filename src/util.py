@@ -20,6 +20,7 @@ ocr_dict = {
     "RJ": "Rajasthan",
     "UP": "Uttar Pradesh",
     "UT": "Uttarakhand",
+    "TN": "Tamil Nadu",
 }
 
 
