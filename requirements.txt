@@ -17,7 +17,6 @@ idna==2.9
 jdcal==1.4.1
 matplotlib==3.2.2
 numpy==1.19.0
-opencv-python==4.2.0.34
 openpyxl==3.0.4
 pandas==1.0.5
 pdfminer.six==20200517
