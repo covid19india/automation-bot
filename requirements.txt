@@ -15,7 +15,7 @@ grpcio==1.30.0
 html5lib==1.1
 idna==2.9
 jdcal==1.4.1
-kiwisolver==1.2.0
+kiwisolver
 matplotlib==3.2.2
 numpy==1.19.0
 opencv-python==4.2.0.34
