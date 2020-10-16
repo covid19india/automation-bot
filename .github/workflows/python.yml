@@ -35,7 +35,7 @@ jobs:
     - name: Install OS dependencies
       run: sudo apt update && sudo apt install build-essential libpoppler-cpp-dev pkg-config locales
     - name: Install Python dependencies
-      run: pip install -r requirements.txt
+      run: pip install -r requirements.txt -r webScraper/requirements.txt
     - name: Start Bot
       run: |
         pushd webScraper
