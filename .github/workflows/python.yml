@@ -11,7 +11,7 @@ on:
     types: [my-event]
 jobs:
   run-bot:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     # timeout-minutes: 9  
 
     steps:
@@ -32,6 +32,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
+    # Remove apt repos that are known to break from time to time
+    # See https://github.com/actions/virtual-environments/issues/323
+    - name: Remove broken apt repos [Ubuntu]
+      run: |
+         for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
     - name: Install OS dependencies
       run: sudo apt update && sudo apt install build-essential libpoppler-cpp-dev pkg-config locales
     - name: Install Python dependencies
