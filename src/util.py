@@ -15,12 +15,15 @@ ocr_dict = {
     "HP": "Himachal Pradesh",
     "JK": "Jammu and Kashmir",
     "JH": "Jharkhand",
+    "KA": "Karnataka",
     "MP": "Madhya Pradesh",
     "MH": "Maharashtra",
+    "NL": "Nagaland",
     "PB": "Punjab",
     "RJ": "Rajasthan",
     "UP": "Uttar Pradesh",
     "UT": "Uttarakhand",
+    "TG": "Telangana",
     "TN": "Tamil Nadu",
 }
 
