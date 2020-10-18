@@ -40,6 +40,9 @@ def entry(bot, update):
             if(state_name == "Tamil Nadu"):
                 start_end_districts = "Ariyalur,Railway"
 
+            if(state_name == "Jharkhand"):
+                start_end_districts = "auto,West"
+
             ocr1(
                 bot,
                 update.callback_query.message.chat.id,
