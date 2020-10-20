@@ -42,6 +42,7 @@ jobs:
         git submodule update --init --recursive --remote
         git rev-parse --short HEAD
         git checkout master
+        git rev-parse HEAD
         popd
     # Remove apt repos that are known to break from time to time
     # See https://github.com/actions/virtual-environments/issues/323
