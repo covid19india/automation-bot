@@ -18,6 +18,7 @@ ocr_dict = {
     "KA": "Karnataka",
     "MP": "Madhya Pradesh",
     "MH": "Maharashtra",
+    "MZ": "Mizoram",
     "NL": "Nagaland",
     "PB": "Punjab",
     "RJ": "Rajasthan",
