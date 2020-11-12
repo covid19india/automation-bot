@@ -39,6 +39,9 @@ def entry(bot, update):
 
             if(state_name == "Tamil Nadu"):
                 start_end_districts = "Ariyalur,Railway"
+            
+            if(state_name == "Meghalaya"):
+                start_end_districts = "East,auto"
 
             ocr1(
                 bot,
