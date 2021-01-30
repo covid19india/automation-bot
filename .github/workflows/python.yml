@@ -11,7 +11,7 @@ on:
     types: [my-event]
 jobs:
   run-bot:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     # timeout-minutes: 9  
 
     steps:
