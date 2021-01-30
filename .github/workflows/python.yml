@@ -51,7 +51,7 @@ jobs:
     #      for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
     
     - name: Install OS dependencies
-      run: sudo apt update && sudo apt install build-essential libpoppler-cpp-dev libilmbase-dev libopenexr-dev libgstreamer1.0-dev pkg-config locales
+      run: sudo apt update && sudo apt install build-essential libpoppler-cpp-dev libilmbase-dev openexr libopenexr-dev libgstreamer1.0-dev pkg-config locales
     
     - name: Install Python dependencies
       run: pip install --upgrade pip && pip install wheel && pip install -r requirements.txt -r webScraper/requirements.txt
