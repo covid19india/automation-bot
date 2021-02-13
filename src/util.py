@@ -37,6 +37,7 @@ pdf_dict = {
     "TN": "Tamil Nadu",
     "WB": "West Bengal",
     "AP": "Andhra Pradesh",
+    "KL": "Kerala"
 }
 
 dash_dict = {
