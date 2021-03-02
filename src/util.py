@@ -51,5 +51,6 @@ dash_dict = {
     "OR": "Odisha",
     "PY": "Puducherry",
     "TR": "Tripura",
+    "VC": "Vaccine"
 }
 
