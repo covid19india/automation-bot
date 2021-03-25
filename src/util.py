@@ -44,6 +44,7 @@ dash_dict = {
     "AS": "Assam",
     "AP": "Andhra Pradesh",
     "GJ": "Gujarat",
+    "JH": "Jharkhand",
     "KL": "Kerala",
     "LA": "Ladakh",
     "MH": "Maharashtra",
