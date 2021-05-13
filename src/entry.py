@@ -184,23 +184,15 @@ def entry(bot, update):
                 text_prev = update.message.text
                 text_replaced = text_prev.replace("“", '"').replace("”", '"')
                 text = shlex.split(text_replaced)
-                if update.message.reply_to_message.document.mime_type == 'application/pdf':
-                    pdf_file = update.message.reply_to_message.document.get_file()
-                    try:
+                try:
+                    if update.message.reply_to_message.document.mime_type == 'application/pdf':
+                        pdf_file = update.message.reply_to_message.document.get_file()
                         ka_detail(bot,update.message.chat.id, pdf_file, text[1],text[2],text[3])
                         return
-                    except Exception as e:
-                        update.message.reply_text(
-                            str(
-                                """Reply to KA bulletin PDF with\n`/pdf <category (c/r/d)> <start page> <end page>`"""
-                            ),
-                            parse_mode=telegram.ParseMode.MARKDOWN,
-                        )
-                        logging.error(e)
-                        return
+                except Exception as e:
+                    logging.error(e)
 
-                
-                elif update.message.reply_to_message.entities[0].type == "url":
+                if update.message.reply_to_message.entities[0].type == "url":
                     url = update.message.reply_to_message.text
                     try:
                         pdf(bot, update.message.chat.id, text[1], url, text[2])
@@ -212,10 +204,7 @@ def entry(bot, update):
                             parse_mode=telegram.ParseMode.MARKDOWN,
                         )
                         logging.error(e)
-                        pass
-
-                return
-
+                        return
             elif update.message.text.startswith("/test"):
                 message = "200 OK!"
                 return
