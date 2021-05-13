@@ -2,6 +2,7 @@ import subprocess
 import telegram
 import os
 import logging
+from glob import glob
 
 path = os.path.abspath("")
 path_ocr = path + "/webScraper/automation/ocr"
@@ -223,3 +224,76 @@ def dashboard(bot, chat_id, state_name):
             except Exception as e:
                 logging.error(e)
                 pass
+
+
+def ka_detail(bot, chat_id, pdf_file, category, start_page, end_page):
+    """
+    Run KA automation
+    """
+    # Save TG file
+    pdf_file.download(path_automation + '/.tmp/KA.pdf')
+
+    pdf_log_file = "/tmp/pdf_output.txt"
+    pdf_err_file = "/tmp/pdf_err.txt"
+    # python3 kaautomation.py deceased 80 85
+    with open(pdf_log_file, "w") as log_file:
+        with open(pdf_err_file, "w") as err_file:
+            bot.send_chat_action(chat_id=chat_id, action=telegram.ChatAction.TYPING)
+            logging.info(f"KA Detail : {category} {start_page} {end_page}")
+            p = subprocess.Popen(
+                [
+                    "python3",
+                    "kaautomation.py",
+                    category[0].lower(),    # To handle even if the user inputs full word
+                    start_page,
+                    end_page
+                ],
+                cwd=path_automation,
+                stdout=log_file,
+                stderr=err_file,
+                stdin=subprocess.PIPE,
+                encoding="utf8",
+            )
+            p.communicate()
+
+    with open(pdf_log_file, "rb") as log_file:
+        with open(pdf_err_file, "rb") as err_file:
+            out = log_file.read()
+            err = err_file.read()
+            try:
+                # Send the errata
+                if err is not None:
+                    if len(err) > 4095:
+                        bot.send_document(chat_id=chat_id, document=err_file)
+                    else:
+                        bot.send_message(chat_id=chat_id, text=err.decode("utf-8"))
+                os.remove(pdf_err_file)
+            except Exception as e:
+                logging.error(e)
+                pass
+
+            try:
+                # Send the results
+                if out is not None:
+                    if len(out) > 4095:
+                        log_file.seek(0)
+                        bot.send_document(chat_id=chat_id, document=log_file)
+                    else:
+                        bot.send_message(chat_id=chat_id, text=out.decode("utf-8"))
+                    os.remove(pdf_log_file)
+            except Exception as e:
+                logging.error(e)
+                pass
+    try:
+        # Send the output file
+        with open(path_automation + "/kaconfirmed.csv",'rb') as f:
+            bot.send_document(chat_id=chat_id, document=f)
+        # Remove the output to avoid resending in future
+        os.remove(path_automation + "/kaconfirmed.csv")
+        for f in glob(path_automation + "/.tmp/*.csv"):
+            os.remove(f)
+        os.remove(path_automation + "/.tmp/KA.pdf")
+    except Exception as e:
+        logging.error(e)    
+        bot.send_message(chat_id=chat_id, text="Something went wrong while sending output")
+    return

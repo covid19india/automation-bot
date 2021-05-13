@@ -5,7 +5,7 @@ import os
 import shlex
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from src.util import build_menu, ocr_dict, pdf_dict, dash_dict
-from src.ocr_functions import ocr1, ocr2, pdf, dashboard
+from src.ocr_functions import ocr1, ocr2, pdf, dashboard, ka_detail
 import json
 import logging
 
@@ -117,7 +117,7 @@ def entry(bot, update):
                 )
                 return
         except IndexError:
-            pass
+            return
 
         try:
             if update.message.text.startswith("/dashboard"):
@@ -139,7 +139,8 @@ def entry(bot, update):
                     reply_markup=reply_markup,
                 )
                 return
-        except:
+        except Exception as e:
+            logging.error(e)
             bot.send_message(
                 chat_id=update.message.chat.id, text="Something wrong.. :/"
             )
@@ -183,18 +184,35 @@ def entry(bot, update):
                 text_prev = update.message.text
                 text_replaced = text_prev.replace("“", '"').replace("”", '"')
                 text = shlex.split(text_replaced)
-                url = update.message.reply_to_message.text
-                try:
-                    pdf(bot, update.message.chat.id, text[1], url, text[2])
-                except Exception as e:
-                    update.message.reply_text(
-                        str(
-                            """Reply to the pdf URL with\n`/pdf <state name> <page number>`"""
-                        ),
-                        parse_mode=telegram.ParseMode.MARKDOWN,
-                    )
-                    logging.error(e)
-                    pass
+                if update.message.reply_to_message.document.mime_type == 'application/pdf':
+                    pdf_file = update.message.reply_to_message.document.get_file()
+                    try:
+                        ka_detail(bot,update.message.chat.id, pdf_file, text[1],text[2],text[3])
+                        return
+                    except Exception as e:
+                        update.message.reply_text(
+                            str(
+                                """Reply to KA bulletin PDF with\n`/pdf <category (c/r/d)> <start page> <end page>`"""
+                            ),
+                            parse_mode=telegram.ParseMode.MARKDOWN,
+                        )
+                        logging.error(e)
+                        return
+
+                
+                elif update.message.reply_to_message.entities[0].type == "url":
+                    url = update.message.reply_to_message.text
+                    try:
+                        pdf(bot, update.message.chat.id, text[1], url, text[2])
+                    except Exception as e:
+                        update.message.reply_text(
+                            str(
+                                """Reply to the pdf URL with\n`/pdf <state name> <page number>`"""
+                            ),
+                            parse_mode=telegram.ParseMode.MARKDOWN,
+                        )
+                        logging.error(e)
+                        pass
 
                 return
 
