@@ -191,20 +191,23 @@ def entry(bot, update):
                         return
                 except Exception as e:
                     logging.error(e)
-
-                if update.message.reply_to_message.entities[0].type == "url":
-                    url = update.message.reply_to_message.text
-                    try:
-                        pdf(bot, update.message.chat.id, text[1], url, text[2])
-                    except Exception as e:
-                        update.message.reply_text(
-                            str(
-                                """Reply to the pdf URL with\n`/pdf <state name> <page number>`"""
-                            ),
-                            parse_mode=telegram.ParseMode.MARKDOWN,
-                        )
-                        logging.error(e)
-                        return
+                try:
+                    if update.message.reply_to_message.entities[0].type == "url":
+                        url = update.message.reply_to_message.text
+                        try:
+                            pdf(bot, update.message.chat.id, text[1], url, text[2])
+                        except Exception as e:
+                            update.message.reply_text(
+                                str(
+                                    """Reply to the pdf URL with\n`/pdf <state name> <page number>`"""
+                                ),
+                                parse_mode=telegram.ParseMode.MARKDOWN,
+                            )
+                            logging.error(e)
+                            return
+                 except Exception as e:
+                    logging.error(e)
+                    return
             elif update.message.text.startswith("/test"):
                 message = "200 OK!"
                 return
