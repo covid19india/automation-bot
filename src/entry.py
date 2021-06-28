@@ -205,7 +205,7 @@ def entry(bot, update):
                             )
                             logging.error(e)
                             return
-                 except Exception as e:
+                except Exception as e:
                     logging.error(e)
                     return
             elif update.message.text.startswith("/test"):
