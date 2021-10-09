@@ -10,6 +10,7 @@ def build_menu(buttons, n_cols, header_buttons=None, footer_buttons=None):
 ocr_dict = {
     "AP": "Andhra Pradesh",
     "AR": "Arunachal Pradesh",
+    "AS": "Assam",
     "BR": "Bihar",
     "CT": "Chhattisgarh",
     "HP": "Himachal Pradesh",
